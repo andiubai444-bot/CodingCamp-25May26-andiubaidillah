@@ -1,8 +1,3 @@
-// =====================================================
-// EXPENSE & BUDGET VISUALIZER - MAIN SCRIPT
-// =====================================================
-
-// ===================== GLOBAL STATE =====================
 const DEFAULT_CATEGORIES = ['Food', 'Transport', 'Housing', 'Entertainment', 'Health', 'Other'];
 
 let expenses = [];
@@ -12,7 +7,6 @@ let isLocalStorageAvailable = true;
 let editingExpenseId = null;
 let currentBarChartGranularity = 'daily';
 
-// ===================== STORAGE MANAGER =====================
 const StorageManager = {
   init() {
     try {
@@ -46,7 +40,6 @@ const StorageManager = {
     }
 
     try {
-      // Load categories
       const storedCategories = localStorage.getItem('categories');
       if (storedCategories) {
         categories = JSON.parse(storedCategories);
@@ -55,11 +48,9 @@ const StorageManager = {
         this.saveCategories();
       }
 
-      // Load expenses
       const storedExpenses = localStorage.getItem('expenses');
       expenses = storedExpenses ? JSON.parse(storedExpenses) : [];
 
-      // Load budgets
       const storedBudgets = localStorage.getItem('budgets');
       budgets = storedBudgets ? JSON.parse(storedBudgets) : {};
 
@@ -101,7 +92,6 @@ const StorageManager = {
   }
 };
 
-// ===================== UTILITY FUNCTIONS =====================
 function formatCurrency(amount) {
   return new Intl.NumberFormat('id-ID', {
     style: 'currency',
@@ -141,13 +131,11 @@ function getDaysInMonth(year, month) {
   return new Date(year, month, 0).getDate();
 }
 
-// ===================== CATEGORY MANAGEMENT =====================
 function populateCategorySelectors() {
   const expenseCategorySelect = document.getElementById('expense-category');
   const budgetCategorySelect = document.getElementById('budget-category');
   const filterCategorySelect = document.getElementById('filter-category');
 
-  // Clear existing options (except first placeholder)
   [expenseCategorySelect, budgetCategorySelect].forEach(select => {
     while (select.options.length > 1) {
       select.remove(1);
@@ -158,7 +146,6 @@ function populateCategorySelectors() {
     filterCategorySelect.remove(1);
   }
 
-  // Populate with current categories
   categories.forEach(cat => {
     const option1 = new Option(cat, cat);
     const option2 = new Option(cat, cat);
@@ -196,14 +183,12 @@ function addCategory(name) {
   const trimmedName = name.trim();
   const errorSpan = document.getElementById('category-name-error');
 
-  // Validate length
   if (trimmedName.length < 1 || trimmedName.length > 50) {
     errorSpan.textContent = 'Nama kategori harus 1-50 karakter';
     errorSpan.hidden = false;
     return false;
   }
 
-  // Check duplicate (case-insensitive)
   const exists = categories.some(cat => cat.toLowerCase() === trimmedName.toLowerCase());
   if (exists) {
     errorSpan.textContent = 'Kategori sudah ada';
@@ -221,8 +206,7 @@ function addCategory(name) {
 
 function deleteCategory(name) {
   const errorSpan = document.getElementById('category-name-error');
-
-  // Prevent deletion of default categories
+  
   if (DEFAULT_CATEGORIES.includes(name)) {
     errorSpan.textContent = 'Kategori default tidak dapat dihapus';
     errorSpan.hidden = false;
@@ -233,10 +217,8 @@ function deleteCategory(name) {
     return;
   }
 
-  // Remove category
   categories = categories.filter(cat => cat !== name);
 
-  // Remove associated budget
   if (budgets[name]) {
     delete budgets[name];
     StorageManager.saveBudgets();
@@ -255,18 +237,15 @@ function saveBudget(category, amount) {
   const categoryError = document.getElementById('budget-category-error');
   const amountError = document.getElementById('budget-amount-error');
 
-  // Reset errors
   categoryError.hidden = true;
   amountError.hidden = true;
 
-  // Validate category
   if (!category) {
     categoryError.textContent = 'Pilih kategori';
     categoryError.hidden = false;
     return false;
   }
 
-  // Validate amount
   if (!amount || amount <= 0) {
     amountError.textContent = 'Jumlah harus lebih dari 0';
     amountError.hidden = false;
@@ -285,7 +264,6 @@ function saveBudget(category, amount) {
   return true;
 }
 
-// ===================== EXPENSE MANAGEMENT =====================
 function addExpense(expenseData) {
   const { amount, category, date, description } = expenseData;
   
@@ -293,26 +271,22 @@ function addExpense(expenseData) {
   const categoryError = document.getElementById('expense-category-error');
   const dateError = document.getElementById('expense-date-error');
 
-  // Reset errors
   amountError.hidden = true;
   categoryError.hidden = true;
   dateError.hidden = true;
 
-  // Validate amount
   if (!amount || amount <= 0) {
     amountError.textContent = 'Jumlah harus lebih dari 0';
     amountError.hidden = false;
     return false;
   }
 
-  // Validate category
   if (!category) {
     categoryError.textContent = 'Pilih kategori';
     categoryError.hidden = false;
     return false;
   }
 
-  // Validate date
   if (!date) {
     dateError.textContent = 'Tanggal harus diisi';
     dateError.hidden = false;
@@ -342,12 +316,10 @@ function updateExpense(id, expenseData) {
   const categoryError = document.getElementById('expense-category-error');
   const dateError = document.getElementById('expense-date-error');
 
-  // Reset errors
   amountError.hidden = true;
   categoryError.hidden = true;
   dateError.hidden = true;
 
-  // Validate (same as add)
   if (!amount || amount <= 0) {
     amountError.textContent = 'Jumlah harus lebih dari 0';
     amountError.hidden = false;
@@ -370,7 +342,6 @@ function updateExpense(id, expenseData) {
   if (index === -1) return false;
 
   try {
-    // Update expense
     expenses[index] = {
       id,
       amount: parseFloat(amount),
@@ -386,7 +357,6 @@ function updateExpense(id, expenseData) {
     return true;
   } catch (e) {
     console.error('Failed to update expense:', e);
-    // Rollback would happen here in production
     return false;
   }
 }
@@ -409,18 +379,15 @@ function editExpense(id) {
 
   editingExpenseId = id;
 
-  // Populate form
   document.getElementById('expense-id').value = id;
   document.getElementById('expense-amount').value = expense.amount;
   document.getElementById('expense-category').value = expense.category;
   document.getElementById('expense-date').value = expense.date;
   document.getElementById('expense-description').value = expense.description;
 
-  // Update button text and show cancel button
   document.getElementById('btn-save-expense').textContent = 'Update Transaksi';
   document.getElementById('btn-cancel-edit').hidden = false;
 
-  // Scroll to form
   document.getElementById('expense-form').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -431,25 +398,20 @@ function cancelEdit() {
   document.getElementById('btn-save-expense').textContent = 'Simpan Transaksi';
   document.getElementById('btn-cancel-edit').hidden = true;
   
-  // Reset date to today
   document.getElementById('expense-date').value = getTodayDateString();
 }
 
-// ===================== DASHBOARD UPDATE =====================
 function updateDashboard() {
   const currentMonthExpenses = expenses.filter(exp => isCurrentMonth(exp.date));
-  
-  // Calculate totals
+
   const totalSpent = currentMonthExpenses.reduce((sum, exp) => sum + exp.amount, 0);
   const totalBudget = Object.values(budgets).reduce((sum, budget) => sum + budget, 0);
   const totalRemaining = totalBudget - totalSpent;
 
-  // Update summary cards
   document.getElementById('total-spent').textContent = formatCurrency(totalSpent);
   document.getElementById('total-budget').textContent = formatCurrency(totalBudget);
   document.getElementById('total-remaining').textContent = formatCurrency(totalRemaining);
 
-  // Update per-category summary
   updateCategorySummary(currentMonthExpenses);
 }
 
@@ -457,14 +419,12 @@ function updateCategorySummary(currentMonthExpenses) {
   const tbody = document.getElementById('budget-summary-body');
   tbody.innerHTML = '';
 
-  // Calculate spending per category
   const spendingByCategory = {};
   currentMonthExpenses.forEach(exp => {
     const cat = categories.includes(exp.category) ? exp.category : 'Deleted Category';
     spendingByCategory[cat] = (spendingByCategory[cat] || 0) + exp.amount;
   });
 
-  // Get all categories that have either spending or budget
   const allRelevantCategories = new Set([
     ...Object.keys(spendingByCategory),
     ...Object.keys(budgets)
@@ -499,7 +459,6 @@ function updateCategorySummary(currentMonthExpenses) {
   }
 }
 
-// ===================== EXPENSE LIST RENDERING =====================
 function renderExpenseList() {
   const filterCategory = document.getElementById('filter-category').value;
   const filterMonth = document.getElementById('filter-month').value;
@@ -508,24 +467,20 @@ function renderExpenseList() {
   const sortBy = document.getElementById('sort-by').value;
   const dateError = document.getElementById('filter-date-error');
 
-  // Validate date range
   if (filterDateStart && filterDateEnd && filterDateStart > filterDateEnd) {
     dateError.textContent = 'Tanggal mulai tidak boleh lebih besar dari tanggal akhir';
     dateError.hidden = false;
-    return; // Keep previous results
+    return;
   } else {
     dateError.hidden = true;
   }
 
-  // Filter expenses
   let filtered = [...expenses];
 
-  // Filter by category
   if (filterCategory) {
     filtered = filtered.filter(exp => exp.category === filterCategory);
   }
 
-  // Filter by month (preset)
   if (filterMonth) {
     const [year, month] = filterMonth.split('-').map(Number);
     filtered = filtered.filter(exp => {
@@ -534,7 +489,6 @@ function renderExpenseList() {
     });
   }
 
-  // Filter by date range
   if (filterDateStart) {
     filtered = filtered.filter(exp => exp.date >= filterDateStart);
   }
@@ -542,7 +496,6 @@ function renderExpenseList() {
     filtered = filtered.filter(exp => exp.date <= filterDateEnd);
   }
 
-  // Sort expenses
   filtered.sort((a, b) => {
     switch (sortBy) {
       case 'date-desc':
@@ -558,7 +511,6 @@ function renderExpenseList() {
     }
   });
 
-  // Render list
   const expenseList = document.getElementById('expense-list');
   const emptyState = document.getElementById('expense-list-empty');
 
@@ -599,11 +551,9 @@ function renderExpenseList() {
   }
 }
 
-// ===================== MONTH FILTER POPULATION =====================
 function populateMonthFilter() {
   const filterMonth = document.getElementById('filter-month');
-  
-  // Get unique year-month combinations from expenses
+
   const months = new Set();
   expenses.forEach(exp => {
     const date = new Date(exp.date);
@@ -611,12 +561,10 @@ function populateMonthFilter() {
     months.add(yearMonth);
   });
 
-  // Clear existing options (except first)
   while (filterMonth.options.length > 1) {
     filterMonth.remove(1);
   }
 
-  // Sort and add options
   const sortedMonths = Array.from(months).sort().reverse();
   sortedMonths.forEach(yearMonth => {
     const [year, month] = yearMonth.split('-');
@@ -627,7 +575,6 @@ function populateMonthFilter() {
   });
 }
 
-// ===================== NATIVE CHARTS =====================
 function updateCharts() {
   const currentMonthExpenses = expenses.filter(exp => isCurrentMonth(exp.date));
   
@@ -652,11 +599,9 @@ function drawPieChart(currentMonthExpenses) {
   const ctx = canvas.getContext('2d');
   const legend = document.getElementById('pie-legend');
 
-  // Clear canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   legend.innerHTML = '';
 
-  // Calculate spending by category (exclude zero spending)
   const spendingByCategory = {};
   currentMonthExpenses.forEach(exp => {
     const cat = categories.includes(exp.category) ? exp.category : 'Deleted Category';
@@ -668,24 +613,21 @@ function drawPieChart(currentMonthExpenses) {
 
   const total = data.reduce((sum, [_, amount]) => sum + amount, 0);
 
-  // Colors
   const colors = [
     '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
     '#FF6384', '#C9CBCF', '#4BC0C0', '#FF9F40', '#FFCE56'
   ];
 
-  // Draw pie chart
   const centerX = canvas.width / 2;
   const centerY = canvas.height / 2;
   const radius = Math.min(centerX, centerY) - 20;
 
-  let currentAngle = -Math.PI / 2; // Start at top
+  let currentAngle = -Math.PI / 2;
 
   data.forEach(([category, amount], index) => {
     const sliceAngle = (amount / total) * 2 * Math.PI;
     const color = colors[index % colors.length];
 
-    // Draw slice
     ctx.beginPath();
     ctx.moveTo(centerX, centerY);
     ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
@@ -698,7 +640,6 @@ function drawPieChart(currentMonthExpenses) {
 
     currentAngle += sliceAngle;
 
-    // Add to legend
     const legendItem = document.createElement('div');
     legendItem.className = 'legend-item';
     legendItem.innerHTML = `
@@ -713,7 +654,6 @@ function drawBarChart(currentMonthExpenses, granularity) {
   const canvas = document.getElementById('bar-chart');
   const ctx = canvas.getContext('2d');
 
-  // Clear canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   const current = getCurrentMonth();
@@ -723,7 +663,6 @@ function drawBarChart(currentMonthExpenses, granularity) {
   let labels = [];
 
   if (granularity === 'daily') {
-    // Daily data
     const dailySpending = {};
     for (let day = 1; day <= daysInMonth; day++) {
       dailySpending[day] = 0;
@@ -737,7 +676,6 @@ function drawBarChart(currentMonthExpenses, granularity) {
     data = Object.values(dailySpending);
     labels = Object.keys(dailySpending);
   } else {
-    // Weekly data
     const weeklySpending = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
 
     currentMonthExpenses.forEach(exp => {
@@ -750,14 +688,12 @@ function drawBarChart(currentMonthExpenses, granularity) {
     labels = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4', 'Minggu 5'];
   }
 
-  // Chart dimensions
   const padding = 40;
   const chartWidth = canvas.width - padding * 2;
   const chartHeight = canvas.height - padding * 2;
   const barWidth = chartWidth / data.length;
   const maxValue = Math.max(...data, 1);
 
-  // Draw axes
   ctx.strokeStyle = '#333';
   ctx.lineWidth = 2;
   ctx.beginPath();
@@ -766,7 +702,6 @@ function drawBarChart(currentMonthExpenses, granularity) {
   ctx.lineTo(canvas.width - padding, canvas.height - padding);
   ctx.stroke();
 
-  // Draw bars
   data.forEach((value, index) => {
     const barHeight = (value / maxValue) * chartHeight;
     const x = padding + index * barWidth + barWidth * 0.1;
@@ -776,7 +711,6 @@ function drawBarChart(currentMonthExpenses, granularity) {
     ctx.fillStyle = '#36A2EB';
     ctx.fillRect(x, y, width, barHeight);
 
-    // Draw label
     ctx.fillStyle = '#333';
     ctx.font = '10px sans-serif';
     ctx.textAlign = 'center';
@@ -785,7 +719,6 @@ function drawBarChart(currentMonthExpenses, granularity) {
   });
 }
 
-// ===================== DATA EXPORT/IMPORT =====================
 function exportCSV() {
   if (expenses.length === 0) {
     alert('Tidak ada data untuk diekspor');
@@ -793,7 +726,6 @@ function exportCSV() {
   }
 
   try {
-    // Create CSV content
     const headers = ['date', 'category', 'amount', 'description'];
     const rows = expenses.map(exp => [
       exp.date,
@@ -807,7 +739,6 @@ function exportCSV() {
       ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
     ].join('\n');
 
-    // Create download
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
@@ -855,7 +786,6 @@ function importJSON(file) {
     try {
       const data = JSON.parse(e.target.result);
 
-      // Validate schema
       if (!data.expenses || !Array.isArray(data.expenses)) {
         alert('Format file tidak valid: expenses harus berupa array');
         return;
@@ -866,7 +796,6 @@ function importJSON(file) {
         return;
       }
 
-      // Merge expenses (skip duplicates)
       let importedCount = 0;
       data.expenses.forEach(newExp => {
         const isDuplicate = expenses.some(exp => 
@@ -888,12 +817,10 @@ function importJSON(file) {
         }
       });
 
-      // Merge budgets
       Object.entries(data.budgets).forEach(([category, limit]) => {
         budgets[category] = limit;
       });
 
-      // Save and update UI
       StorageManager.saveExpenses();
       StorageManager.saveBudgets();
       updateDashboard();
@@ -911,7 +838,6 @@ function importJSON(file) {
   reader.readAsText(file);
 }
 
-// ===================== THEME TOGGLE =====================
 function initTheme() {
   const savedTheme = localStorage.getItem('theme') || 'light';
   if (savedTheme === 'dark') {
@@ -947,14 +873,11 @@ function updateThemeButton(theme) {
   }
 }
 
-// ===================== EVENT LISTENERS =====================
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize
   StorageManager.init();
   StorageManager.loadData();
   initTheme();
 
-  // Populate UI
   populateCategorySelectors();
   renderCategoryList();
   updateDashboard();
@@ -962,13 +885,10 @@ document.addEventListener('DOMContentLoaded', function() {
   updateCharts();
   populateMonthFilter();
 
-  // Set today's date in expense form
   document.getElementById('expense-date').value = getTodayDateString();
 
-  // Theme toggle
   document.getElementById('btn-theme-toggle').addEventListener('click', toggleTheme);
 
-  // Budget form
   document.getElementById('budget-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const category = document.getElementById('budget-category').value;
@@ -979,7 +899,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Expense form
   document.getElementById('expense-form').addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -993,10 +912,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let success = false;
     if (expenseId) {
-      // Update existing
       success = updateExpense(expenseId, expenseData);
     } else {
-      // Add new
       success = addExpense(expenseData);
     }
 
@@ -1006,10 +923,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Cancel edit button
   document.getElementById('btn-cancel-edit').addEventListener('click', cancelEdit);
 
-  // Category form
   document.getElementById('category-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const name = document.getElementById('new-category-name').value;
@@ -1019,7 +934,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Bar chart toggle
   document.getElementById('bar-toggle-daily').addEventListener('click', function() {
     currentBarChartGranularity = 'daily';
     this.classList.add('btn--toggle-active');
@@ -1038,23 +952,19 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCharts();
   });
 
-  // Filter and sort controls
   document.getElementById('filter-category').addEventListener('change', renderExpenseList);
   document.getElementById('filter-month').addEventListener('change', renderExpenseList);
   document.getElementById('filter-date-start').addEventListener('change', renderExpenseList);
   document.getElementById('filter-date-end').addEventListener('change', renderExpenseList);
   document.getElementById('sort-by').addEventListener('change', renderExpenseList);
 
-  // Export buttons
   document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
   document.getElementById('btn-export-json').addEventListener('click', exportJSON);
 
-  // Import button
   document.getElementById('btn-import-json').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
       importJSON(file);
-      // Reset input so same file can be imported again
       e.target.value = '';
     }
   });
