@@ -1,8 +1,3 @@
-/* =====================================================
-   EXPENSE & BUDGET VISUALIZER - PREMIUM SAAS DASHBOARD
-   ===================================================== */
-
-/* ===================== CSS RESET & BASE ===================== */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -10,7 +5,6 @@
 }
 
 :root {
-  /* Neutral Palette - Slate Scale */
   --color-slate-50: #f8fafc;
   --color-slate-100: #f1f5f9;
   --color-slate-200: #e2e8f0;
@@ -22,14 +16,12 @@
   --color-slate-800: #1e293b;
   --color-slate-900: #0f172a;
 
-  /* Primary - Deep Indigo (Elegant) */
   --color-primary-50: #eef2ff;
   --color-primary-100: #e0e7ff;
   --color-primary-500: #6366f1;
   --color-primary-600: #4f46e5;
   --color-primary-700: #4338ca;
 
-  /* Status Colors - Muted Tones */
   --color-success-50: #f0fdf4;
   --color-success-500: #10b981;
   --color-success-600: #059669;
@@ -42,7 +34,6 @@
   --color-warning-500: #f59e0b;
   --color-warning-600: #d97706;
 
-  /* Light Theme Variables */
   --bg-primary: #fafbfc;
   --bg-secondary: #ffffff;
   --bg-tertiary: var(--color-slate-100);
@@ -56,16 +47,13 @@
   --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   --shadow-xl: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
 
-  /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.3);
   --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
 
-  /* Typography */
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Courier New', monospace;
 
-  /* Spacing Scale */
   --space-xs: 0.5rem;
   --space-sm: 0.75rem;
   --space-md: 1rem;
@@ -74,18 +62,15 @@
   --space-2xl: 3rem;
   --space-3xl: 4rem;
 
-  /* Border Radius - Subtle & Harmonious */
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
 
-  /* Transitions */
   --transition-fast: 0.15s ease;
   --transition-base: 0.2s ease;
   --transition-slow: 0.3s ease;
 }
 
-/* ===================== DARK THEME ===================== */
 body.dark-theme {
   --bg-primary: #0b0f19;
   --bg-secondary: #121827;
@@ -100,13 +85,11 @@ body.dark-theme {
   --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
   --shadow-xl: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
   
-  /* Glassmorphism Dark */
   --glass-bg: rgba(18, 24, 39, 0.7);
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
-/* Animated Background Gradient */
 body {
   position: relative;
   overflow-x: hidden;
@@ -139,7 +122,6 @@ body.dark-theme::before {
   66% { transform: translate(-5%, 5%) rotate(240deg); }
 }
 
-/* ===================== BASE STYLES ===================== */
 body {
   font-family: var(--font-sans);
   font-size: 15px;
@@ -151,7 +133,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ===================== TYPOGRAPHY ===================== */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   letter-spacing: -0.02em;
@@ -164,7 +145,6 @@ h2 { font-size: 1.5rem; }
 h3 { font-size: 1.25rem; }
 h4 { font-size: 1.125rem; }
 
-/* Screen Reader Only */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -177,7 +157,6 @@ h4 { font-size: 1.125rem; }
   border-width: 0;
 }
 
-/* ===================== LAYOUT ===================== */
 .app-header {
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
@@ -236,7 +215,6 @@ h4 { font-size: 1.125rem; }
   transition: background-color var(--transition-base), border-color var(--transition-base);
 }
 
-/* ===================== BANNER ===================== */
 .banner {
   padding: var(--space-md) var(--space-xl);
   border-radius: var(--radius-md);
@@ -257,7 +235,6 @@ body.dark-theme .banner--warning {
   border-color: rgba(245, 158, 11, 0.3);
 }
 
-/* ===================== SECTIONS ===================== */
 .dashboard,
 .form-section,
 .charts-section,
@@ -299,7 +276,6 @@ body.dark-theme .banner--warning {
   margin-bottom: var(--space-lg);
 }
 
-/* ===================== CARDS ===================== */
 .card {
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-color);
@@ -380,7 +356,6 @@ body.dark-theme .banner--warning {
   transition: color var(--transition-base);
 }
 
-/* ===================== BUDGET SUMMARY TABLE ===================== */
 .budget-summary {
   margin-top: var(--space-2xl);
 }
@@ -463,7 +438,6 @@ body.dark-theme .status-indicator--danger {
   color: var(--color-danger-500);
 }
 
-/* ===================== BUTTONS ===================== */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -578,7 +552,6 @@ body.dark-theme .status-indicator--danger {
   border-color: var(--color-primary-700);
 }
 
-/* ===================== FORMS ===================== */
 .form-group {
   margin-bottom: var(--space-lg);
 }
@@ -671,7 +644,6 @@ select {
   margin-top: var(--space-xl);
 }
 
-/* ===================== CHARTS ===================== */
 .charts-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -788,7 +760,6 @@ canvas {
   animation: fadeIn 0.5s ease;
 }
 
-/* ===================== CATEGORY MANAGEMENT ===================== */
 .add-category-section {
   margin-top: var(--space-2xl);
   padding-top: var(--space-2xl);
@@ -826,7 +797,6 @@ canvas {
   box-shadow: var(--shadow-md);
 }
 
-/* ===================== EXPENSE LIST ===================== */
 .list-controls {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -956,7 +926,6 @@ canvas {
   margin-left: var(--space-lg);
 }
 
-/* ===================== RESPONSIVE ===================== */
 @media (max-width: 768px) {
   .app-header {
     flex-direction: column;
@@ -1042,7 +1011,6 @@ canvas {
   }
 }
 
-/* ===================== UTILITIES ===================== */
 .text-center {
   text-align: center;
 }
@@ -1061,7 +1029,6 @@ canvas {
 .mb-4 { margin-bottom: var(--space-lg); }
 .mb-5 { margin-bottom: var(--space-xl); }
 
-/* ===================== PRINT STYLES ===================== */
 @media print {
   .app-header,
   .app-footer,
