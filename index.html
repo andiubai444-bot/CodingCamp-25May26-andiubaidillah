@@ -8,7 +8,6 @@
 </head>
 <body>
 
-  <!-- ===================== HEADER ===================== -->
   <header class="app-header">
     <h1 class="app-title">💰 Expense &amp; Budget Visualizer</h1>
     <button id="btn-theme-toggle" class="btn btn-icon" aria-label="Toggle dark/light mode">
@@ -17,19 +16,15 @@
     </button>
   </header>
 
-  <!-- ===================== STORAGE WARNING BANNER ===================== -->
-  <!-- Shown only when LocalStorage is unavailable or parse error occurs -->
   <div id="storage-warning" class="banner banner--warning" role="alert" hidden>
     ⚠️ LocalStorage tidak tersedia. Data tidak akan disimpan pada sesi ini.
   </div>
 
   <main class="app-main">
 
-    <!-- ===================== DASHBOARD ===================== -->
     <section class="dashboard" aria-labelledby="dashboard-heading">
       <h2 id="dashboard-heading" class="section-title">Dashboard</h2>
 
-      <!-- Summary Cards -->
       <div class="summary-cards">
         <div class="card card--summary">
           <span class="card__label">Total Pengeluaran Bulan Ini</span>
@@ -45,7 +40,6 @@
         </div>
       </div>
 
-      <!-- Per-Category Budget Summary Table -->
       <div class="budget-summary">
         <h3 class="subsection-title">Ringkasan per Kategori</h3>
         <table class="budget-table" aria-label="Ringkasan budget per kategori">
@@ -59,13 +53,11 @@
             </tr>
           </thead>
           <tbody id="budget-summary-body">
-            <!-- Populated by JavaScript -->
           </tbody>
         </table>
       </div>
     </section>
 
-    <!-- ===================== BUDGET FORM ===================== -->
     <section class="form-section" aria-labelledby="budget-form-heading">
       <h2 id="budget-form-heading" class="section-title">Set Budget Kategori</h2>
       <form id="budget-form" novalidate>
@@ -73,7 +65,6 @@
           <label for="budget-category">Kategori</label>
           <select id="budget-category" name="budget-category" required>
             <option value="">-- Pilih Kategori --</option>
-            <!-- Populated by JavaScript -->
           </select>
           <span id="budget-category-error" class="form-error" role="alert" hidden></span>
         </div>
@@ -95,19 +86,15 @@
       </form>
     </section>
 
-    <!-- ===================== CHARTS ===================== -->
     <section class="charts-section" aria-labelledby="charts-heading">
       <h2 id="charts-heading" class="section-title">Visualisasi Pengeluaran</h2>
 
-      <!-- Empty state — shown when no expenses exist for current month -->
       <div id="charts-empty-state" class="empty-state" hidden>
         <p>Belum ada pengeluaran bulan ini. Tambahkan transaksi untuk melihat grafik.</p>
       </div>
 
-      <!-- Charts container — hidden when no data -->
       <div id="charts-container" class="charts-container">
 
-        <!-- Pie Chart -->
         <div class="chart-wrapper">
           <h3 class="chart-title">Pengeluaran per Kategori</h3>
           <canvas
@@ -120,7 +107,6 @@
           <div id="pie-legend" class="chart-legend" aria-label="Legenda pie chart"></div>
         </div>
 
-        <!-- Bar Chart -->
         <div class="chart-wrapper">
           <h3 class="chart-title">Pengeluaran Harian / Mingguan</h3>
           <div class="chart-controls">
@@ -152,11 +138,9 @@
       </div>
     </section>
 
-    <!-- ===================== EXPENSE FORM ===================== -->
     <section class="form-section" aria-labelledby="expense-form-heading">
       <h2 id="expense-form-heading" class="section-title">Tambah / Edit Transaksi</h2>
       <form id="expense-form" novalidate>
-        <!-- Hidden field to track edit mode -->
         <input type="hidden" id="expense-id" name="expense-id" value="" />
 
         <div class="form-group">
@@ -199,7 +183,6 @@
           <label for="expense-category">Kategori <span aria-hidden="true">*</span></label>
           <select id="expense-category" name="expense-category" required>
             <option value="">-- Pilih Kategori --</option>
-            <!-- Populated by JavaScript -->
           </select>
           <span id="expense-category-error" class="form-error" role="alert" hidden></span>
         </div>
@@ -210,7 +193,6 @@
         </div>
       </form>
 
-      <!-- Add Custom Category -->
       <div class="add-category-section">
         <h3 class="subsection-title">Tambah Kategori Baru</h3>
         <form id="category-form" novalidate>
@@ -228,28 +210,23 @@
           <span id="category-name-error" class="form-error" role="alert" hidden></span>
         </form>
 
-        <!-- Category List with Delete -->
         <div class="category-list-wrapper">
           <h4 class="subsection-title">Kategori Tersedia</h4>
           <ul id="category-list" class="category-list" aria-label="Daftar kategori">
-            <!-- Populated by JavaScript -->
           </ul>
         </div>
       </div>
     </section>
 
-    <!-- ===================== EXPENSE LIST ===================== -->
     <section class="expense-list-section" aria-labelledby="expense-list-heading">
       <h2 id="expense-list-heading" class="section-title">Daftar Transaksi</h2>
 
-      <!-- Filter & Sort Controls -->
       <div class="list-controls">
 
         <div class="filter-group">
           <label for="filter-category">Filter Kategori</label>
           <select id="filter-category" name="filter-category">
             <option value="">Semua Kategori</option>
-            <!-- Populated by JavaScript -->
           </select>
         </div>
 
@@ -257,7 +234,6 @@
           <label for="filter-month">Filter Bulan</label>
           <select id="filter-month" name="filter-month">
             <option value="">Semua Bulan</option>
-            <!-- Populated by JavaScript -->
           </select>
         </div>
 
@@ -284,7 +260,6 @@
 
       </div>
 
-      <!-- Export / Import Actions -->
       <div class="data-actions">
         <button id="btn-export-csv" class="btn btn--secondary">⬇ Export CSV</button>
         <button id="btn-export-json" class="btn btn--secondary">⬇ Export JSON</button>
@@ -294,12 +269,9 @@
         </label>
       </div>
 
-      <!-- Expense List -->
       <ul id="expense-list" class="expense-list" aria-label="Daftar transaksi" aria-live="polite">
-        <!-- Populated by JavaScript -->
       </ul>
 
-      <!-- Empty state -->
       <p id="expense-list-empty" class="empty-state" hidden>
         Tidak ada transaksi yang cocok dengan filter yang dipilih.
       </p>
@@ -308,7 +280,6 @@
 
   </main>
 
-  <!-- ===================== FOOTER ===================== -->
   <footer class="app-footer">
     <p>Expense &amp; Budget Visualizer &mdash; Data tersimpan di browser Anda.</p>
   </footer>
